@@ -239,10 +239,6 @@ class NovaComputeUtilsTests(CharmTestCase):
                 'contexts': [],
                 'services': ['nova-compute']
             },
-            '/etc/default/qemu-kvm': {
-                'contexts': [],
-                'services': ['qemu-kvm']
-            },
             '/etc/init/libvirt-bin.override': {
                 'contexts': [],
                 'services': ['libvirt-bin']
@@ -292,10 +288,6 @@ class NovaComputeUtilsTests(CharmTestCase):
             '/var/lib/charm/nova_compute/ceph.conf': {
                 'contexts': [],
                 'services': ['nova-compute']
-            },
-            '/etc/default/qemu-kvm': {
-                'contexts': [],
-                'services': ['qemu-kvm']
             },
             '/etc/init/libvirt-bin.override': {
                 'contexts': [],
@@ -348,10 +340,6 @@ class NovaComputeUtilsTests(CharmTestCase):
             '/var/lib/charm/nova_compute/ceph.conf': {
                 'contexts': [],
                 'services': ['nova-compute']
-            },
-            '/etc/default/qemu-kvm': {
-                'contexts': [],
-                'services': ['qemu-kvm']
             },
             '/etc/init/libvirt-bin.override': {
                 'contexts': [],
@@ -410,10 +398,6 @@ class NovaComputeUtilsTests(CharmTestCase):
             '/var/lib/charm/nova_compute/ceph.conf': {
                 'contexts': [],
                 'services': ['nova-compute']
-            },
-            '/etc/default/qemu-kvm': {
-                'contexts': [],
-                'services': ['qemu-kvm']
             },
             '/etc/init/libvirt-bin.override': {
                 'contexts': [],

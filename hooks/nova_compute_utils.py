@@ -192,7 +192,6 @@ LIBVIRTD_CONF = '/etc/libvirt/libvirtd.conf'
 LIBVIRT_BIN = '/etc/default/libvirt-bin'
 LIBVIRT_BIN_OVERRIDES = '/etc/init/libvirt-bin.override'
 NOVA_CONF = '%s/nova.conf' % NOVA_CONF_DIR
-QEMU_KVM = '/etc/default/qemu-kvm'
 NOVA_API_AA_PROFILE_PATH = ('/etc/apparmor.d/{}'.format(NOVA_API_AA_PROFILE))
 NOVA_COMPUTE_AA_PROFILE_PATH = ('/etc/apparmor.d/{}'
                                 ''.format(NOVA_COMPUTE_AA_PROFILE))
@@ -250,10 +249,6 @@ LIBVIRT_BIN_DAEMON = 'libvirt-bin'
 LIBVIRT_RESOURCE_MAP = {
     QEMU_CONF: {
         'services': [LIBVIRT_BIN_DAEMON],
-        'contexts': [NovaComputeLibvirtContext()],
-    },
-    QEMU_KVM: {
-        'services': ['qemu-kvm'],
         'contexts': [NovaComputeLibvirtContext()],
     },
     LIBVIRTD_CONF: {

@@ -32,6 +32,7 @@ TO_PATCH = [
     'lsb_release',
     'os_release',
     'get_relation_ip',
+    'sed',
 ]
 
 NEUTRON_CONTEXT = {
@@ -202,7 +203,6 @@ class NovaComputeContextTests(CharmTestCase):
             {'libvirtd_opts': '',
              'libvirt_user': 'libvirt',
              'arch': platform.machine(),
-             'kvm_hugepages': 0,
              'listen_tls': 0,
              'host_uuid': self.host_uuid,
              'reserved_host_memory': 512}, libvirt())
@@ -216,7 +216,6 @@ class NovaComputeContextTests(CharmTestCase):
             {'libvirtd_opts': '-d',
              'libvirt_user': 'libvirtd',
              'arch': platform.machine(),
-             'kvm_hugepages': 0,
              'listen_tls': 0,
              'host_uuid': self.host_uuid,
              'reserved_host_memory': 512}, libvirt())
@@ -230,7 +229,6 @@ class NovaComputeContextTests(CharmTestCase):
             {'libvirtd_opts': '-d -l',
              'libvirt_user': 'libvirtd',
              'arch': platform.machine(),
-             'kvm_hugepages': 0,
              'listen_tls': 0,
              'host_uuid': self.host_uuid,
              'reserved_host_memory': 512}, libvirt())
@@ -245,7 +243,6 @@ class NovaComputeContextTests(CharmTestCase):
              'libvirt_user': 'libvirtd',
              'disk_cachemodes': 'file=unsafe,block=none',
              'arch': platform.machine(),
-             'kvm_hugepages': 0,
              'listen_tls': 0,
              'host_uuid': self.host_uuid,
              'reserved_host_memory': 512}, libvirt())
@@ -260,10 +257,28 @@ class NovaComputeContextTests(CharmTestCase):
              'libvirt_user': 'libvirtd',
              'arch': platform.machine(),
              'hugepages': True,
-             'kvm_hugepages': 1,
              'listen_tls': 0,
              'host_uuid': self.host_uuid,
              'reserved_host_memory': 512}, libvirt())
+
+    def test_libvirt_hugepages_default_replace(self):
+        self.test_config.set('hugepages', '11')
+        context.NovaComputeLibvirtContext()()
+
+        self.sed.assert_called_with(
+            context.QEMU_KVM_DEFAULT,
+            'KVM_HUGEPAGES=.*',
+            'KVM_HUGEPAGES=1',
+        )
+
+        self.test_config.set('hugepages', False)
+        context.NovaComputeLibvirtContext()()
+
+        self.sed.assert_called_with(
+            context.QEMU_KVM_DEFAULT,
+            'KVM_HUGEPAGES=.*',
+            'KVM_HUGEPAGES=0',
+        )
 
     def test_lxd_live_migration_opts_xenial(self):
         self.kv.return_value = FakeUnitdata(**{'host_uuid': self.host_uuid})
@@ -343,7 +358,6 @@ class NovaComputeContextTests(CharmTestCase):
              'libvirt_user': 'libvirtd',
              'arch': platform.machine(),
              'hugepages': True,
-             'kvm_hugepages': 1,
              'listen_tls': 0,
              'host_uuid': self.host_uuid,
              'reserved_host_memory': 1024,

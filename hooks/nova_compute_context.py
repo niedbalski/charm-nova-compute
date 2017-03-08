@@ -17,6 +17,7 @@ import os
 import platform
 
 from charmhelpers.core.unitdata import kv
+from charmhelpers.core.files import sed
 from charmhelpers.contrib.openstack import context
 from charmhelpers.core.host import (
     lsb_release,
@@ -56,6 +57,7 @@ OVS_BRIDGE = 'br-int'
 CEPH_CONF = '/etc/ceph/ceph.conf'
 CHARM_CEPH_CONF = '/var/lib/charm/{}/ceph.conf'
 
+QEMU_KVM_DEFAULT = "/etc/default/qemu-kvm"
 NOVA_API_AA_PROFILE = 'usr.bin.nova-api'
 NOVA_COMPUTE_AA_PROFILE = 'usr.bin.nova-compute'
 NOVA_NETWORK_AA_PROFILE = 'usr.bin.nova-network'
@@ -187,9 +189,11 @@ class NovaComputeLibvirtContext(context.OSContextGenerator):
 
         if config('hugepages'):
             ctxt['hugepages'] = True
-            ctxt['kvm_hugepages'] = 1
+            sed(QEMU_KVM_DEFAULT, 'KVM_HUGEPAGES=.*',
+                'KVM_HUGEPAGES=1')
         else:
-            ctxt['kvm_hugepages'] = 0
+            sed(QEMU_KVM_DEFAULT, 'KVM_HUGEPAGES=.*',
+                'KVM_HUGEPAGES=0')
 
         if config('pci-passthrough-whitelist'):
             ctxt['pci_passthrough_whitelist'] = \
