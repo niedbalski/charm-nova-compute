@@ -202,6 +202,7 @@ class NovaComputeContextTests(CharmTestCase):
             {'libvirtd_opts': '',
              'libvirt_user': 'libvirt',
              'arch': platform.machine(),
+             'ksm': 'AUTO',
              'kvm_hugepages': 0,
              'listen_tls': 0,
              'host_uuid': self.host_uuid,
@@ -216,6 +217,7 @@ class NovaComputeContextTests(CharmTestCase):
             {'libvirtd_opts': '-d',
              'libvirt_user': 'libvirtd',
              'arch': platform.machine(),
+             'ksm': 'AUTO',
              'kvm_hugepages': 0,
              'listen_tls': 0,
              'host_uuid': self.host_uuid,
@@ -230,6 +232,7 @@ class NovaComputeContextTests(CharmTestCase):
             {'libvirtd_opts': '-d -l',
              'libvirt_user': 'libvirtd',
              'arch': platform.machine(),
+             'ksm': 'AUTO',
              'kvm_hugepages': 0,
              'listen_tls': 0,
              'host_uuid': self.host_uuid,
@@ -245,6 +248,7 @@ class NovaComputeContextTests(CharmTestCase):
              'libvirt_user': 'libvirtd',
              'disk_cachemodes': 'file=unsafe,block=none',
              'arch': platform.machine(),
+             'ksm': 'AUTO',
              'kvm_hugepages': 0,
              'listen_tls': 0,
              'host_uuid': self.host_uuid,
@@ -260,6 +264,7 @@ class NovaComputeContextTests(CharmTestCase):
              'libvirt_user': 'libvirtd',
              'arch': platform.machine(),
              'hugepages': True,
+             'ksm': 'AUTO',
              'kvm_hugepages': 1,
              'listen_tls': 0,
              'host_uuid': self.host_uuid,
@@ -342,6 +347,7 @@ class NovaComputeContextTests(CharmTestCase):
             {'libvirtd_opts': '-d',
              'libvirt_user': 'libvirtd',
              'arch': platform.machine(),
+             'ksm': 'AUTO',
              'hugepages': True,
              'kvm_hugepages': 1,
              'listen_tls': 0,
@@ -349,6 +355,23 @@ class NovaComputeContextTests(CharmTestCase):
              'reserved_host_memory': 1024,
              'vcpu_pin_set': '^0^2',
              'pci_passthrough_whitelist': 'mypcidevices'}, libvirt())
+
+    def test_ksm_configs(self):
+        self.test_config.set('ksm', '1')
+        libvirt = context.NovaComputeLibvirtContext()
+        self.assertTrue(libvirt()['ksm'] == '1')
+
+        self.test_config.set('ksm', '0')
+        libvirt = context.NovaComputeLibvirtContext()
+        self.assertTrue(libvirt()['ksm'] == '0')
+
+        self.test_config.set('ksm', 'AUTO')
+        libvirt = context.NovaComputeLibvirtContext()
+        self.assertTrue(libvirt()['ksm'] == 'AUTO')
+
+        self.test_config.set('ksm', '')
+        libvirt = context.NovaComputeLibvirtContext()
+        self.assertTrue(libvirt()['ksm'] == 'AUTO')
 
     @patch.object(context.uuid, 'uuid4')
     def test_libvirt_cpu_mode_default(self, mock_uuid):

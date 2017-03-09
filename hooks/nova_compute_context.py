@@ -191,6 +191,11 @@ class NovaComputeLibvirtContext(context.OSContextGenerator):
         else:
             ctxt['kvm_hugepages'] = 0
 
+        if config('ksm') in ("1", "0",):
+            ctxt['ksm'] = config('ksm')
+        else:
+            ctxt['ksm'] = "AUTO"
+
         if config('pci-passthrough-whitelist'):
             ctxt['pci_passthrough_whitelist'] = \
                 config('pci-passthrough-whitelist')
